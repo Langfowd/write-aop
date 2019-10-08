@@ -16,6 +16,7 @@ public class AopMethodHandle {
     public List<MethodWrapper> getMethodIntercepters() {
         List<MethodWrapper> methods = new ArrayList<MethodWrapper>();
         for (Object aopBean : aopBeans) {
+            // 遍历带有@CustomAspect的类，获取带有3个注解的方法
             List<MethodWrapper> methodIntercepters = getMethodIntercepters(aopBean);
             methods.addAll(methodIntercepters);
         }
@@ -24,8 +25,10 @@ public class AopMethodHandle {
 
     private List<MethodWrapper> getMethodIntercepters(Object aopBean) {
         List<MethodWrapper> allMethods = new ArrayList<MethodWrapper>();
+        // 获取所有的共有方法
         Method[] methods = aopBean.getClass().getMethods();
         for (Method method : methods) {
+            // 遍历获取带有以下3个注解的方法并封装成MethodWrapper
             if (method.isAnnotationPresent(CustomBefore.class)) {
                 CustomBefore customBefore = method.getAnnotation(CustomBefore.class);
                 allMethods.add(new MethodWrapper(customBefore.value(),method,aopBean,CustomBefore.class.getName()));
